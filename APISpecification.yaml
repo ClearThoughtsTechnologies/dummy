@@ -1,0 +1,1118 @@
+openapi: '3.0.0'
+info:
+  title: Campus hiring tool
+  description: Using this tool you can run a campus hiring drive
+  version: "1.0.0"
+  contact:
+    name: ClearThoughts
+    url: http://clearthoughtstechnologies.in
+    email: clearthoughtstechnologies@gmail.com
+
+
+servers:
+  - url: http://localhost:8080/v1
+
+
+paths:
+
+#------------------------Company--------------------------
+  /company:
+    post:
+      description: create new company entry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+            example:
+              name: ClearThought
+              email: clearthoughtstechnologies@gmail.com
+              phone: 9980053231
+              username: clearthoughts
+              password: clear123
+              addr1: 2nd Cross
+              addr2: Kalyan Nagar
+              city: Bangalore
+              state: Karnataka
+              pin: 560032
+      responses:
+        '201':
+          description: A newly created company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example: 
+                _id: 123456
+                name: ClearThought
+                email: clearthoughtstechnologies@gmail.com
+                phone: 9980053231
+                username: clearthoughts
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                city: Bangalore
+                state: Karnataka
+                pin: 560032
+    
+    put:
+      description: modify company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+            example: 
+              _id: 123456
+              name: ClearThought
+              email: clearthoughtstechnologies@gmail.com
+              phone: 9980053232
+              username: clearthoughts
+              addr1: 2nd Cross
+              addr2: Kalyan Nagar
+              city: Bangalore
+              state: Karnataka
+              pin: 560032
+      responses:
+        '200':
+          description: Modified company details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example: 
+                _id: 123456
+                name: ClearThought
+                email: clearthoughtstechnologies@gmail.com
+                phone: 9980053232
+                username: clearthoughts
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                city: Bangalore
+                state: Karnataka
+                pin: 560032
+          
+    get:
+      description: Get all company listing
+      parameters: 
+        - name: pageNum
+          in: query
+          description: page number
+          schema: 
+            type: integer
+        
+        - name: noOfElements
+          in: query
+          description: No of elements in page
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: List of company object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example: 
+                company1:
+                  _id: 123456
+                  name: ClearThought
+                  email: clearthoughtstechnologies@gmail.com
+                  phone: 9980053231
+                  username: clearthoughts
+                  addr1: 2nd Cross
+                  addr2: Kalyan Nagar
+                  city: Bangalore
+                  state: Karnataka
+                  pin: 560032
+                
+                company2: 
+                  _id: 345678
+                  name: ClearThought2
+                  email: clearthoughtstechnologies2@gmail.com
+                  phone: 8880053242
+                  username: clearthoughts
+                  addr1: 17 Cross
+                  addr2: JP Nagar
+                  city: Bangalore
+                  state: Karnataka
+                  pin: 560078
+        
+      
+  /company/companyId:
+    get:
+      description: Return specified company object
+      responses:
+        '200':
+          description: specified company details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example: 
+                _id: 123456
+                name: ClearThought
+                email: clearthoughtstechnologies@gmail.com
+                phone: 9980053232
+                username: clearthoughts
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                city: Bangalore
+                state: Karnataka
+                pin: 560032
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+        
+#------------------------End--------------------------
+
+#-------------------------Common----------------------
+  /validateUserId:
+    get:
+      description: This URL will use a bloom filter (Use google Guava bloom filter) and check if the user id already taken. While a company registration is taking place, this url will be used to check for user id
+      parameters: 
+        - name: userid
+          in: query
+          description: user provided id
+          schema:
+            type: string
+          example:
+            userid: clearthougt
+              
+                
+      responses:
+        '200':
+          description: user exists in system
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userExists:
+                    type: boolean
+                    example: true
+                    
+        '404':
+          description: user does not exists in system
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userExists:
+                    type: boolean
+                    example: false
+#----------------------------------------------------------------------------
+
+
+#----------------------------------Drive-------------------------------------  
+  /drive:
+    description: Operartion related to hiring drive
+    post:
+      description: Create a new drive
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+            example: 
+              companyid: abcd1234hsc
+              date: 01-07-2020
+              time: 10:00AM
+              addr1: 1st cross
+              addr2: manyata
+              city: bangalore
+              state: karnataka
+              PIN: 560045
+              organization: IIIT Bangalore
+              recruiters:
+                interviewer:
+                  name: Viswas Gahoi
+                  email: vgohoi@gmail.com
+                  phone: 9988776655
+                  role: Interviewer
+                hrmanager:
+                  name: Dhanesh
+                  email: dhanesh@gmail.com
+                  phone: 9876543212
+                  role: HRManager
+            
+        
+      responses:
+        '201':
+          description: specified company details
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Drive'
+              example: 
+                _id: driveid123
+                companyid: abcd1234hsc
+                date: 01-07-2020
+                time: 10:00AM
+                addr1: 1st cross
+                addr2: manyata
+                city: bangalore
+                state: karnataka
+                PIN: 560045
+                organization: IIIT Bangalore
+                recruiters:
+                  interviewer:
+                    _id: r123
+                    name: Viswas Gahoi
+                    email: vgohoi@gmail.com
+                    phone: 9988776655
+                    role: Interviewer
+                  hrmanager:
+                    _id: h2343
+                    name: Dhanesh
+                    email: dhanesh@gmail.com
+                    phone: 9876543212
+                    role: HRManager
+    
+    put:
+      description: Modify a drive
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+            example: 
+              _id: driveid123
+              companyid: abcd1234hsc
+              date: 01-07-2020
+              time: 10:00AM
+              addr1: 21st cross
+              addr2: changedmanyata
+              city: changedbangalore
+              state: karnataka
+              PIN: 560045
+              organization: changed IIIT Bangalore
+              recruiters:
+                interviewer:
+                  name: Viswas Gahoi
+                  email: vgohoi@gmail.com
+                  phone: 9988776655
+                  role: Interviewer
+                hrmanager:
+                  name: Dhanesh
+                  email: dhanesh@gmail.com
+                  phone: 9876543212
+                  role: HRManager
+      responses:
+        '200':
+          description: specified company details
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Drive'
+              example: 
+                _id: driveid123
+                companyid: abcd1234hsc
+                date: 01-07-2020
+                time: 10:00AM
+                addr1: 21st cross
+                addr2: changedmanyata
+                city: changedbangalore
+                state: karnataka
+                PIN: 560045
+                organization: changed IIIT Bangalore
+                recruiters:
+                  interviewer:
+                    name: Viswas Gahoi
+                    email: vgohoi@gmail.com
+                    phone: 9988776655
+                    role: Interviewer
+                  hrmanager:
+                    name: Dhanesh
+                    email: dhanesh@gmail.com
+                    phone: 9876543212
+                    role: HRManager
+          
+    get:
+      description: Get all drive listing
+      parameters:
+        - name: pageNum
+          in: query
+          description: page number
+          schema: 
+            type: integer
+        
+        - name: noOfElements
+          in: query
+          description: No of elements in page
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: List of drive object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+              example: 
+                drive1:
+                  _id: driveid123
+                  companyid: abcd1234hsc
+                  date: 01-07-2020
+                  time: 10:00AM
+                  addr1: 21st cross
+                  addr2: changedmanyata
+                  city: changedbangalore
+                  state: karnataka
+                  PIN: 560045
+                  organization: changed IIIT Bangalore
+                  recruiters:
+                    interviewer:
+                      name: Viswas Gahoi
+                      email: vgohoi@gmail.com
+                      phone: 9988776655
+                      role: Interviewer
+                    hrmanager:
+                      name: Dhanesh
+                      email: dhanesh@gmail.com
+                      phone: 9876543212
+                      role: HRManager
+                
+                drive2: 
+                  _id: driveid345
+                  companyid: abcd1234hsc
+                  date: 05-05-2020
+                  time: 11:00AM
+                  addr1: 1st cross
+                  addr2: manyata
+                  city: bangalore
+                  state: karnataka
+                  PIN: 560045
+                  organization: IIIT Bangalore
+                  recruiters:
+                    interviewer:
+                      name: Viswas Gahoi
+                      email: vgohoi@gmail.com
+                      phone: 9988776655
+                      role: Interviewer
+                    hrmanager:
+                      name: Dhanesh
+                      email: dhanesh@gmail.com
+                      phone: 9876543212
+                      role: HRManager
+          
+  /drive/driveId:
+    get:
+      description: Return specified drive object
+      responses:
+        '200':
+          description: specified drive details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example: 
+                _id: driveid123
+                companyid: abcd1234hsc
+                date: 01-07-2020
+                time: 10:00AM
+                addr1: 21st cross
+                addr2: changedmanyata
+                city: changedbangalore
+                state: karnataka
+                PIN: 560045
+                organization: changed IIIT Bangalore
+                recruiters:
+                  interviewer:
+                    name: Viswas Gahoi
+                    email: vgohoi@gmail.com
+                    phone: 9988776655
+                    role: Interviewer
+                  hrmanager:
+                    name: Dhanesh
+                    email: dhanesh@gmail.com
+                    phone: 9876543212
+                    role: HRManager
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+#----------------------------------------------------------------------------
+
+#-------------------------------TPO------------------------------------------
+  /tpo/registrationUUID:
+    get:
+      description: This url will be used to fetch tpo basic information. While tpo open the mailed link and trying to register himself. Frontend will fetch stored TPO info by this URL. registrationUUID will be a variable and dynamic one and that is sent by mail.
+      responses:
+        '200':
+          description: The unregistered TPO detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TPOUnregistered'
+              example: 
+                _id: tpo123rd
+                email: tpo@gmail.com
+                phone: 9980053231
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: false
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+  
+  /tpo:
+    post:
+      description: Register a new TPO
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TPO'
+            example: 
+                _id: tpo123rd
+                name: TPOName
+                email: tpo@gmail.com
+                phone: 9980053231
+                username: tpouser
+                password: abc123
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: true
+      responses:
+        '201':
+          description: The TPO details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TPO'
+              example: 
+                _id: tpo123rd
+                name: TPOName
+                email: tpo@gmail.com
+                phone: 9980053231
+                username: tpouser
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: true
+          
+    
+    put:
+      description: Modify a TPO
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TPO'
+            example: 
+                _id: tpo123rd
+                name: AnotherTPOName
+                email: tpo@gmail.com
+                phone: 9980053231
+                username: tpouser
+                addr1: 32nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+      responses:
+        '200':
+          description: The TPO details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TPO'
+              example: 
+                _id: tpo123rd
+                name: AnotherTPOName
+                email: tpo@gmail.com
+                phone: 9980053231
+                username: tpouser
+                addr1: 32nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: true
+          
+    get:
+      description: Get all drive listing
+      parameters:
+        - name: pageNum
+          in: query
+          description: page number
+          schema: 
+            type: integer
+        
+        - name: noOfElements
+          in: query
+          description: No of elements in page
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: List of TPO object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TPO'
+              example: 
+                company1:
+                  _id: tpo123rd
+                  name: TPOName
+                  email: tpo1@gmail.com
+                  phone: 9980053231
+                  username: tpouser
+                  addr1: 2nd Cross
+                  addr2: Kalyan Nagar
+                  City: Bangalore
+                  state: Karnataka
+                  pin: 560032
+                  driveid: driveid123
+                
+                company2: 
+                  _id: tpo234bc
+                  name: TPOName
+                  email: tpo2@gmail.com
+                  phone: 9980053231
+                  username: tpouser2
+                  addr1: 32nd Cross
+                  addr2: Kalyan Nagar
+                  City: Bangalore
+                  state: Karnataka
+                  pin: 560032
+                  driveid: driveid123
+    
+  /tpo/tpoId:
+    get:
+      description: Return specified TPO object
+      responses:
+        '200':
+          description: The TPO details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TPO'
+              example: 
+                _id: tpo123rd
+                name: AnotherTPOName
+                email: tpo@gmail.com
+                phone: 9980053231
+                username: tpouser
+                addr1: 32nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: true
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+#-------------------------------------------------------------------------
+
+#-------------------------------Candidate---------------------------------
+  /candidate/registrationUUID:
+    get:
+      description: This url will be used to fetch candidate basic information. While candidate open the mailed link and trying to register himself. Frontend will fetch stored Candidate info by this URL. registrationUUID will be a variable and dynamic one and that is sent by mail.
+      responses:
+        '200':
+          description: The unregistered TPO detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateUnregistered'
+              example: 
+                _id: can123rd
+                email: abhi@gmail.com
+                phone: 9980053231
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                registered: false
+                organization: IIIT Bangalore
+                tpoid: tpo123rd
+
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+  
+  /candidate:
+    post:
+      description: Register a new Candidate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+            example: 
+              name: Abhijeet Bannerjee
+              email: abhi@gmail.com
+              phone: 9980053231
+              username: canuser
+              password: abc123
+              addr1: 2nd Cross
+              addr2: Kalyan Nagar
+              City: Bangalore
+              state: Karnataka
+              pin: 560032
+              registrationuuid: aedre123wers
+              driveid: driveid123
+              organization: IIIT Bangalore
+              tpoid: tpo123rd
+              runningyear: 4
+              markspercentage: 84
+              cvid: abhijeet_cv_12345
+      responses:
+        '201':
+          description: The newly registered candidate detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+              example: 
+                _id: can123rd
+                name: Abhijeet Bannerjee
+                email: abhi@gmail.com
+                phone: 9980053231
+                username: canuser
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                organization: IIIT Bangalore
+                tpoid: tpo123rd
+                runningyear: 4
+                markspercentage: 84
+                cvid: abhijeet_cv_12345
+    
+    put:
+      description: Modify a candidate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+            example: 
+                _id: can123rd
+                name: Abhijeet Bannerjee
+                email: abhi@gmail.com
+                phone: 9980053231
+                username: canuser
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                organization: IIIT Bangalore
+                tpoid: tpo123rd
+                runningyear: 4
+                markspercentage: 84
+                cvid: abhijeet_cv_12345
+      responses:
+        '200':
+          description: The candidate detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+              example: 
+                _id: can123rd
+                name: Abhijeet Bannerjee
+                email: abhi@gmail.com
+                phone: 9980053231
+                username: canuser
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                organization: IIIT Bangalore
+                tpoid: tpo123rd
+                runningyear: 4
+                markspercentage: 84
+                cvid: abhijeet_cv_12345
+          
+    get:
+      description: Get all Candidate listing
+      parameters:
+        - name: pageNum
+          in: query
+          description: page number
+          schema: 
+            type: integer
+        
+        - name: noOfElements
+          in: query
+          description: No of elements in page
+          schema:
+            type: integer
+            
+      responses:
+        '200':
+          description: List of candidate object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+              example: 
+                candidate1:
+                  _id: can123rd
+                  name: Abhijeet Bannerjee
+                  email: abhi@gmail.com
+                  phone: 9980053231
+                  username: canuser
+                  addr1: 2nd Cross
+                  addr2: Kalyan Nagar
+                  City: Bangalore
+                  state: Karnataka
+                  pin: 560032
+                  registrationuuid: aedre123wers
+                  driveid: driveid123
+                  organization: IIIT Bangalore
+                  tpoid: tpo123rd
+                  runningyear: 4
+                  markspercentage: 84
+                  cvid: abhijeet_cv_12345
+                
+                candidate2: 
+                  _id: can456xc
+                  name: Dipak Pratap
+                  email: dipak@gmail.com
+                  phone: 9980053231
+                  username: canuser
+                  addr1: 2nd Cross
+                  addr2: Kalyan Nagar
+                  City: Bangalore
+                  state: Karnataka
+                  pin: 560032
+                  registrationuuid: aedre123wers
+                  driveid: driveid123
+                  organization: IIIT Bangalore
+                  tpoid: tpo123rd
+                  runningyear: 4
+                  markspercentage: 84
+                  cvid: abhijeet_cv_12345
+
+    
+  /candidate/CandidateId:
+    get:
+      description: Return specified Candidate object
+      responses:
+        '200':
+          description: The candidate detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+              example: 
+                _id: can123rd
+                name: Abhijeet Bannerjee
+                email: abhi@gmail.com
+                phone: 9980053231
+                username: canuser
+                addr1: 2nd Cross
+                addr2: Kalyan Nagar
+                City: Bangalore
+                state: Karnataka
+                pin: 560032
+                registrationuuid: aedre123wers
+                driveid: driveid123
+                organization: IIIT Bangalore
+                tpoid: tpo123rd
+                runningyear: 4
+                markspercentage: 84
+                cvid: abhijeet_cv_12345
+        '404':
+          $ref: '#/components/schemas/ErrorBadRequest'
+#-------------------------------------------------------------------------
+
+components:
+  schemas:
+    Company:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: abcd1234hsc
+        name:
+          type: string
+          example: ClearThought
+        email:
+          type: string
+          example: clearthoughtstechnologies@gmail.com
+        phone:
+          type: number
+          example: 9980053231
+        username:
+          type: string
+          example: clearthoughts
+        password:
+          type: string
+          example: clear123
+        addr1:
+          type: string
+          example: 2nd Cross
+        addr2:
+          type: string
+          example: Kalyan Nagar
+        city: 
+          type: string
+          example: Bangalore
+        state:
+          type: string
+          example: Karnataka
+        pin:
+          type: number
+          example: 560032
+    
+    Drive:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: driveid123
+        companyid:
+          type: string
+          example: abcd1234hsc
+        date:
+          type: string
+          example: 01-07-2020
+        time:
+          type: string
+          example: 10:00AM
+        addr1:
+          type: string
+          example: 1st cross
+        addr2:
+          type: string
+          example: manyata
+        city:
+          type: string
+          example: bangalore
+        state:
+          type: string
+          example: karnataka
+        PIN:
+          type: integer
+          example: 560045
+        recruiters:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recruiter"
+        organization:
+          type: string
+          example: IIIT Bangalore
+    
+    Recruiter:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: r123
+        name:
+          type: string
+          example: Viswas Gahoi
+        email:
+          type: string
+          example: vgohoi@gmail.com
+        phone:
+          type: number
+          example: 9988776655
+        role:
+          type: string
+          example: Interviewer
+    
+    TPO:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: tpo123rd
+        name:
+          type: string
+          example: TPOName
+        email:
+          type: string
+          example: tpo@gmail.com
+        phone:
+          type: number
+          example: 9980053231
+        username:
+          type: string
+          example: tpouser
+        password:
+          type: string
+          example: abc123
+        addr1:
+          type: string
+          example: 2nd Cross
+        addr2:
+          type: string
+          example: Kalyan Nagar
+        city: 
+          type: string
+          example: Bangalore
+        state:
+          type: string
+          example: Karnataka
+        pin:
+          type: integer
+          example: 560032
+        registrationuuid:
+          type: string
+          example: aedre123wers
+        driveid:
+          type: string
+          example: driveid123
+        registered:
+          type: string
+          example: false
+      
+    TPOUnregistered:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: tpo123rd
+        email:
+          type: string
+          example: tpo@gmail.com
+        phone:
+          type: number
+          example: 9980053231
+        registrationuuid:
+          type: string
+          example: aedre123wers
+        driveid:
+          type: string
+          example: driveid123
+        registered:
+          type: string
+          example: false
+    
+    
+    Candidate:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: can123rd
+        name:
+          type: string
+          example: Abhijeet Bannerjee
+        email:
+          type: string
+          example: abhi@gmail.com
+        phone:
+          type: number
+          example: 9980053231
+        username:
+          type: string
+          example: canuser
+        password:
+          type: string
+          example: abc123
+        addr1:
+          type: string
+          example: 2nd Cross
+        addr2:
+          type: string
+          example: Kalyan Nagar
+        city: 
+          type: string
+          example: Bangalore
+        state:
+          type: string
+          example: Karnataka
+        pin:
+          type: integer
+          example: 560032
+        registrationuuid:
+          type: string
+          example: aedre123wers
+        driveid:
+          type: string
+          example: driveid123
+        registered:
+          type: string
+          example: false
+        organization:
+          type: string
+          example: IIIT Bangalore
+        tpoid:
+          type: string
+          example: tpo123rd
+        runningyear:
+          type: integer
+          example: 4
+        markspercentage:
+          type: integer
+          example: 84
+        cvid:
+          type: string
+          example: abhijeet_cv_12345
+    
+    
+    CandidateUnregistered:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: can123rd
+        email:
+          type: string
+          example: abhi@gmail.com
+        phone:
+          type: number
+          example: 9980053231
+        registrationuuid:
+          type: string
+          example: aedre123wers
+        driveid:
+          type: string
+          example: driveid123
+        registered:
+          type: string
+          example: false
+        organization:
+          type: string
+          example: IIIT Bangalore
+        tpoid:
+          type: string
+          example: tpo123rd
+
+
+
+    
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Bad request
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized
