@@ -2,7 +2,9 @@ This project provides API specification and an implementation with dummy static 
 The API specification is following OpenAPI-3.0.0 standard and depicted in APISpecification.yaml file. The APIs are written in Swagger editor (editor.swagger.io). One can import this file to the editor and get a pretified view.
 The Spring project is directly downloaded from swagger editor and modified with the response code. Any one can run the project :
 Go inside spring-server-generated folder. Run the following command.
+
 ./mvnw spring-boot:run
+
 You will get some exception in command prompt while running this project. Dont worry. That is because of a Swagger defect. I can remove that exception, but became lazy.
 
 The purpose of this API specification is to finalize the contract between UI and backend. The generated project will help UI developer with the API available live with dummy data. The backend can be developed with its own business logic parallely while UI development will not be stuck as backend is not ready.
